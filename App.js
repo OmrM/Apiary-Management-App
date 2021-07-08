@@ -1,40 +1,100 @@
-// In App.js in a new project
-
-import * as React from 'react';
-import { View, Text, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
+/* import {useState,useEffect} from 'react-native'; */
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import DrawerNavigator from "./navigation/DrawerNavigator"
 
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen OwO </Text>
-    </View>
-  );
-}
-
-function DetailsScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-    </View>
-  );
-}
+import Amplify from 'aws-amplify';
+import awsconfig from '/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/src/aws-exports.js';
+import{withAuthenticator} from 'aws-amplify-react-native';
+/* import { SafeAreaInsetsContext } from 'react-native-safe-area-context'; */
+/* Amplify.configure(config); */
 
 
 
-const Stack = createStackNavigator();
 
-function App() {
+
+Amplify.configure({
+  ...awsconfig,
+  Analytics: {
+    disabled: true,
+  },
+});
+const Drawer = createDrawerNavigator();
+
+/* export function App()  */
+const App = () =>{
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-      </Stack.Navigator>
+
+      <DrawerNavigator/>
+          
+
     </NavigationContainer>
   );
 }
 
-export default App;
+
+
+
+
+
+
+const styles = StyleSheet.create({
+  homeScreenParent:{
+    flexGrow:1,
+    flexDirection: 'column',
+    paddingBottom:20,
+    padding:10},
+
+  scrollViewChild:{
+    /* flex:3, */
+    flexGrow:1,
+    flexDirection: 'row',
+    /* justifyContent:"space-between", */
+    backgroundColor:'#EFEFEF',
+    /* justifyContent:'space-between', */   
+  },
+  listBorder:{
+    flex:1,
+    backgroundColor: '#FFF',
+    padding:20,
+    margin:10,
+    borderRadius:8,
+  },
+
+  homeBottom:{
+    flexGrow:1,
+    flexDirection: 'row',  
+  },
+  addButton:{
+    /* flexGrow:1, */
+    width: 60,
+    height: 60,
+    backgroundColor: '#FF9900',
+    borderRadius: 60,
+    justifyContent: 'space-around',
+    borderColor: '#C0C0C0',
+    alignSelf:'flex-end', /* this is the thing i wanted. smh */
+  },
+  buttonText:{
+    color:'#FFF',
+    fontSize:30,
+    alignSelf:'center',    /*centers the plus sign */
+      
+
+  },
+  hiveButton:{
+    borderWidth:5,
+    borderRadius:5,
+    
+  }
+
+
+});
+
+export default withAuthenticator(App);
+
+
+
