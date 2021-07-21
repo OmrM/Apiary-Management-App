@@ -106,39 +106,6 @@ export const listPhotos = /* GraphQL */ `
     }
   }
 `;
-export const getHive = /* GraphQL */ `
-  query GetHive($id: ID!) {
-    getHive(id: $id) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listHives = /* GraphQL */ `
-  query ListHives(
-    $filter: ModelHiveFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listHives(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        description
-        location
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
 export const getApiary = /* GraphQL */ `
   query GetApiary($id: ID!) {
     getApiary(id: $id) {
@@ -146,6 +113,21 @@ export const getApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -164,6 +146,47 @@ export const listApiarys = /* GraphQL */ `
         name
         description
         location
+        image
+        hives {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getHive = /* GraphQL */ `
+  query GetHive($id: ID!) {
+    getHive(id: $id) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listHives = /* GraphQL */ `
+  query ListHives(
+    $filter: ModelHiveFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listHives(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        ApiaryID
+        name
+        description
+        location
+        image
         createdAt
         updatedAt
         owner

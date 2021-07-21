@@ -22,19 +22,27 @@ type PhotoS3Info {
 
 
 
-type Hive @model  @auth(rules: [ { allow: owner, ownerField: "owner", operations: [create, read, update, delete] }, ]) {
-  id: ID!
-  name: String!
-  description: String
-  location: String
-
-}
-
 type Apiary @model  @auth(rules: [ { allow: owner, ownerField: "owner", operations: [create, read, update, delete] }, ]) {
   id: ID!
   name: String!
   description: String
   location: String
+  image: String
+   hives: [Hive] @connection(keyName: "byApiary", fields: ["id"])
+}
+
+
+type Hive @model @auth(rules: [ { allow: owner, ownerField: "owner", operations: [create, read, update, delete] }, ]) @key(name: "byApiary", fields: ["ApiaryID", "name","description", "location" ]) {
+  id: ID!
+  ApiaryID: ID!
+  name: String!
+  description: String
+  location: String
+  image: String
+  
+
 
 }
+
+
 

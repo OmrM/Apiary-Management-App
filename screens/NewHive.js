@@ -16,7 +16,7 @@ import {createApiary} from '../src/graphql/mutations';
 const initialState = {name: '', description: ''}
 
 const NewHiveScreen = ({navigation}) => {
-  {/* todo: make a function to communicate to the aws server. add a prop/object to screen and add data to server --in touchable opacity*/}
+  
 
  /*  const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState([]); */
@@ -26,10 +26,7 @@ const NewHiveScreen = ({navigation}) => {
 
   const [formState, setFormState] = useState(initialState)
   const [apiaries, updateApiaries] = useState([])
-  /* useEffect (or componentDidMount() in class impl.) is triggered when the component renders */
-/*   useEffect(() => {getData()}, []) */
 
-  /* where we interact with the graphql api */
   async function getData(){
     try{
       const albumData = await API.graphql(graphqlOperation(listAlbums));
@@ -94,7 +91,7 @@ async function addApiary(){
  
           <View style = {{padding:10}}>
           <TouchableOpacity onPress = {() => addApiary} style = {styles.submitButton}>
-            <Text style = {styles.submitButtonTxt}>Create Apiary</Text>
+            <Text style = {styles.submitButtonTxt}>Create Hive</Text>
             {
               apiaries.map((apiary, index) => (
                 <View key = {apiary.id? apiary.id : index} >

@@ -151,45 +151,6 @@ export const onDeletePhoto = /* GraphQL */ `
     }
   }
 `;
-export const onCreateHive = /* GraphQL */ `
-  subscription OnCreateHive($owner: String!) {
-    onCreateHive(owner: $owner) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateHive = /* GraphQL */ `
-  subscription OnUpdateHive($owner: String!) {
-    onUpdateHive(owner: $owner) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteHive = /* GraphQL */ `
-  subscription OnDeleteHive($owner: String!) {
-    onDeleteHive(owner: $owner) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
 export const onCreateApiary = /* GraphQL */ `
   subscription OnCreateApiary($owner: String!) {
     onCreateApiary(owner: $owner) {
@@ -197,6 +158,21 @@ export const onCreateApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -210,6 +186,21 @@ export const onUpdateApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -223,6 +214,66 @@ export const onDeleteApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateHive = /* GraphQL */ `
+  subscription OnCreateHive($owner: String!) {
+    onCreateHive(owner: $owner) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateHive = /* GraphQL */ `
+  subscription OnUpdateHive($owner: String!) {
+    onUpdateHive(owner: $owner) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteHive = /* GraphQL */ `
+  subscription OnDeleteHive($owner: String!) {
+    onDeleteHive(owner: $owner) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
       createdAt
       updatedAt
       owner

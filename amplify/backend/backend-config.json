@@ -23,5 +23,11 @@
       "dependsOn": [],
       "customAuth": false
     }
+  },
+  "storage": {
+    "ApiaryMgmtImgStore": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }

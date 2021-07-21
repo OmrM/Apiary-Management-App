@@ -1,44 +1,38 @@
 
 import React from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, StyleSheet,FlatList} from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView, StyleSheet,FlatList, RefreshControl} from 'react-native';
 import { useState,State,initialFormState,useEffect } from 'react';
-import { Connect } from 'aws-amplify-react-native';
-
-import { Grid, Header, Input, List, Segment } from 'semantic-ui-react';
-import { withAuthenticator, AmplifySignOut, Authenticator} from 'aws-amplify-react-native/dist/Auth';
 import ApiaryComponent from '../components/ApiaryComponent';
-
- import { API, graphqlOperation } from 'aws-amplify';
-
+import { API, graphqlOperation } from 'aws-amplify';
 /* import * as queries from '../src/graphql/queries'; */
 import {listAlbums, listApiarys} from '../src/graphql/queries';
+
+
+
+
 /* const HomeScreen = ({navigation}) =>{ */
 export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into every screen component */
-    /* HOME PAGE FUNCTIONS */
-  
-    const handleAddTask = () => {
-      console.log('owo');
-    }
+    
+
 
     /* creates an empty array in our state called albums. usestate returns data and function that can change that data(updateAlbums) */
     const [albums, updateAlbums] = useState([])
-    /* useEffect (or componentDidMount() in class implmentation) is triggered when the component renders */
-  
-
-
     const [apiaries, updateApiaries] = useState([])
-
-    /*useEffect(() => {getApiaries()}, []) */
+    
+  
     useEffect( () => {
-      /* got this listener method from https://stackoverflow.com/questions/46504660/refresh-previous-screen-on-goback */
+      /* useEffect (or componentDidMount() in class implmentation) is triggered when the component renders */
+      /* listener method from https://stackoverflow.com/questions/46504660/refresh-previous-screen-on-goback. original useffect: */
+      /*useEffect(() => {getApiaries()}, []) */
        getApiaries();
        const willFocusSubscription = navigation.addListener('focus', () => {
         getApiaries();
         });
-
         return willFocusSubscription;
       }, [] );
-   
+      const wait = (timeout)=>{
+        return new Promise(resolve=> setTimeout(resolve, timeout));
+      }
 
 
     async function getApiaries(){
@@ -46,7 +40,15 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
         const apiaryData = await API.graphql(graphqlOperation(listApiarys));
 
         const apiaryDataItems = apiaryData.data.listApiarys.items
-        updateApiaries(apiaryDataItems);        //calls useState Function to update apiaries state
+        
+/*         console.log("\n")
+        console.log(apiaryDataItems) */
+
+        //calls useState Function to update apiaries state. (updates screen content)
+        updateApiaries(apiaryDataItems);   
+        
+ 
+        
       }
       catch(error){
         console.log("error on fetching apiaries")
@@ -54,40 +56,72 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
     }
     
 
+    
 
+    //refresh control state and refresh method. I don't really understand this. lol
+    const[refreshing, setRefreshing] = useState(false);
+    const onRefresh = React.useCallback(() => {
+     setRefreshing(true);
+     getApiaries();
+     wait(1000).then(() => setRefreshing(false));
+     
+   }, []);
+
+   const handleAddTask = () => {
+    console.log('owo');
+  }
   
+  const emptyComponent =() => {
+    return(
+      <View style={{flex: 1, alignSelf: 'center', justifyContent: 'space-evenly'}}>
+      <Text style={styles.titleStyle}>No Apiaries found!</Text>
+      </View>
+    )
+  }
 
 
 
 
 
-    /* HOME PAGE */
     return (
       
       <View style={styles.homeScreenParent}>
 
       <View style={styles.cardContainer}>
       <FlatList data = {apiaries} 
-        renderItem={({item}) => 
-        <TouchableOpacity onPress={() => navigation.navigate('Details')}>
-        <Text style = {styles.itemTitle}>{item.name}</Text>
-        <Text style = {styles.itemSubTitle}>{item.description}</Text>
-        </TouchableOpacity>} 
-        keyExtractor={({id}) => id}/>
+      
+        renderItem={
+        ({item}) => 
+        /* Pass params to a route by putting them in an object as a second parameter to the navigation.navigate function: 
+            navigation.navigate('RouteName', { /* params go here  })
+            from: https://reactnavigation.org/docs/params/  
+        */
+        <TouchableOpacity onPress={() => {navigation.push('Details', {selectedApiaryData:item, navName: item.name});}} style = {styles.listItemButton}>
+          <Text style = {styles.itemTitle}>{item.name}</Text>
+          <Text style = {styles.itemSubTitle}>{item.description}</Text>
+        </TouchableOpacity>
+        } 
+        keyExtractor={({id}) => id}
+        ListEmptyComponent={emptyComponent}
+
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+        />
 
       </View>
 
 
   
-        <View styles={styles.homeBottom}>
+       
           <View>
-            <TouchableOpacity onPress={() => navigation.navigate('New Apiary')} style = {styles.itemButton}> 
+            <TouchableOpacity onPress={() => navigation.navigate('New Apiary')} style = {styles.addItemButton}> 
               <View style={styles.addButton}>
                 <Text style={styles.buttonText}>+</Text>
               </View> 
             </TouchableOpacity>
             </View>
-        </View>
+
+
+
 
       </View>
     );
@@ -111,43 +145,42 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
       flex:1,
       backgroundColor: '#FFF',
       padding:10,
-      
       margin:10,
-      borderRadius:8,
-  /*     shadowOffset:{
-        width:0,height:1
-      },
-      shadowOpacity:0.1,
-      shadowRadius:2, */
+      borderRadius:18,
+
     },
-  
-    homeBottom:{
-      flex:1,
-      flexDirection: 'row',
-      alignItems: 'flex-end'  
+    listItemButton:{
+      padding: 15,
     },
+
     addButton:{
-      
-      width: 60,
+/*       width: 60,
       height: 60,
-      /* backgroundColor: '#FF9900', */
       backgroundColor: '#ffcd24',
       borderRadius: 60,
       justifyContent: 'space-around',
       borderColor: '#C0C0C0',
-      alignSelf:'flex-end', /* this is the thing i wanted. smh */
+      alignSelf:'flex-end', /* this is the thing i wanted. smh */ 
+      width: 60,
+      height: 60,
+      backgroundColor: '#ffcd24',
+      borderRadius: 60,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: '#C0C0C0',
+      position: 'absolute',
+      right: 30,
+      bottom: 60,
+      shadowColor: 'black',
+      shadowRadius: 10,
+      shadowOpacity: 0.2,
+      shadowOffset: {width: 0 , height: 4},
+      
     },
     buttonText:{
       color:'#FFF',
       fontSize:30,
       alignSelf:'center',    /*centers the plus sign */
-        
-  
-    },
-    hiveButton:{
-      flexGrow:1,
-      borderWidth:5,
-      borderRadius:5,
     },
 
     itemBottomRow:{
@@ -164,10 +197,10 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
     itemSubTitle:{
       fontSize: 12,
       color: '#373737',
-      paddingBottom: 30,
+      /* paddingBottom: 30, */
     
     }, 
-    itemButton:{
+    addItemButton:{
       padding:15,
       
 

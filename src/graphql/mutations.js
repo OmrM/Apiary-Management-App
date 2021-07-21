@@ -169,54 +169,6 @@ export const deletePhoto = /* GraphQL */ `
     }
   }
 `;
-export const createHive = /* GraphQL */ `
-  mutation CreateHive(
-    $input: CreateHiveInput!
-    $condition: ModelHiveConditionInput
-  ) {
-    createHive(input: $input, condition: $condition) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateHive = /* GraphQL */ `
-  mutation UpdateHive(
-    $input: UpdateHiveInput!
-    $condition: ModelHiveConditionInput
-  ) {
-    updateHive(input: $input, condition: $condition) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deleteHive = /* GraphQL */ `
-  mutation DeleteHive(
-    $input: DeleteHiveInput!
-    $condition: ModelHiveConditionInput
-  ) {
-    deleteHive(input: $input, condition: $condition) {
-      id
-      name
-      description
-      location
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
 export const createApiary = /* GraphQL */ `
   mutation CreateApiary(
     $input: CreateApiaryInput!
@@ -227,6 +179,21 @@ export const createApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -243,6 +210,21 @@ export const updateApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -259,6 +241,75 @@ export const deleteApiary = /* GraphQL */ `
       name
       description
       location
+      image
+      hives {
+        items {
+          id
+          ApiaryID
+          name
+          description
+          location
+          image
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createHive = /* GraphQL */ `
+  mutation CreateHive(
+    $input: CreateHiveInput!
+    $condition: ModelHiveConditionInput
+  ) {
+    createHive(input: $input, condition: $condition) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateHive = /* GraphQL */ `
+  mutation UpdateHive(
+    $input: UpdateHiveInput!
+    $condition: ModelHiveConditionInput
+  ) {
+    updateHive(input: $input, condition: $condition) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteHive = /* GraphQL */ `
+  mutation DeleteHive(
+    $input: DeleteHiveInput!
+    $condition: ModelHiveConditionInput
+  ) {
+    deleteHive(input: $input, condition: $condition) {
+      id
+      ApiaryID
+      name
+      description
+      location
+      image
       createdAt
       updatedAt
       owner

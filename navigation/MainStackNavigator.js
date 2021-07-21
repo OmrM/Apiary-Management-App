@@ -29,7 +29,8 @@ const MainStackNavigator = () =>{
           <Image source ={require('../assets/sidebar.png')} style = {styles.sideBar} />
         </TouchableOpacity>
     })}/>
-    <Stack.Screen name="Details" component={DetailsScreen} />
+    {/* using options to dynamically change the title on the navigation bar */}
+    <Stack.Screen name="Details" component={DetailsScreen} options = {({route}) => ({title: route.params.navName})} />
     <Stack.Screen name="New Hive" component={NewHiveScreen} />
     <Stack.Screen name="New Apiary" component={NewApiaryScreen}/>
    
