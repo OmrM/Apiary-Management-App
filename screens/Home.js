@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, StyleSheet,FlatList, RefreshControl} from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView, StyleSheet,FlatList, RefreshControl, Image} from 'react-native';
 import { useState,State,initialFormState,useEffect } from 'react';
 import ApiaryComponent from '../components/ApiaryComponent';
 import { API, graphqlOperation } from 'aws-amplify';
@@ -99,6 +99,8 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
         <TouchableOpacity onPress={() => {navigation.push('Details', {selectedApiaryData:item, navName: item.name});}} style = {styles.listItemButton}>
           <Text style = {styles.itemTitle}>{item.name}</Text>
           <Text style = {styles.itemSubTitle}>{item.description}</Text>
+          {<Image source={{ uri: 'https://basicnave598a12f03ec47ca9928f22e6cb80f2b130106-dev.s3.amazonaws.com/public/37013423-F0C3-4361-878C-6DF485BAC7D4.jpg' }} style={{ width: 20, height: 20 }} />}
+
         </TouchableOpacity>
         } 
         keyExtractor={({id}) => id}

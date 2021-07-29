@@ -6,16 +6,17 @@
    */
 
 
-import { View, Text, TouchableOpacity, StyleSheet, TextInput,KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput,KeyboardAvoidingView, Button, Image, Platform } from 'react-native';
 import React from 'react';
 import { useState,useEffect } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { API, graphqlOperation} from 'aws-amplify';
+import { API, graphqlOperation, Storage} from 'aws-amplify';
 import {createApiary} from '../src/graphql/mutations';
-
-
+import * as ImagePicker from 'expo-image-picker';
+import Auth from '@aws-amplify/auth';
 /* initial state of form Data: blank text boxes  */
-const initialState = {name: '', description: '', location: ''}
+const initialState = {name: '', description: '', location: '', image: ''}
+const initialAppState = {showForm: false, imageURI: ''}
 
 const NewApiaryScreen = ({navigation}) => {
 
@@ -24,6 +25,26 @@ const NewApiaryScreen = ({navigation}) => {
 
   const [formState, setFormState] = useState(initialState)
   
+  const [image, setImage] = useState(null);
+
+
+  useEffect(() => {
+    //check to make sure app has permission to access user's camera roll and to camera 
+    //https://forums.expo.dev/t/imagepicker-not-opening-in-android-production-builds-works-fine-in-expo-client-app/37878
+    //wasn't asking for camera permissions at first. 
+    (async () => {
+      if (Platform.OS !=='web') {
+        const cameraRollStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+        if (
+          cameraRollStatus.status !== 'granted' ||
+          cameraStatus.status !== 'granted'
+        ) {
+          alert('Sorry, we need these permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
 
 
   async function getData(){
@@ -64,7 +85,132 @@ async function addApiary(){
   }
 }
 
- 
+
+
+
+
+
+
+/* handleChoosePhoto = async () =>
+   {
+    try {
+      launchImageLibrary({
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 200,
+        maxWidth: 200,
+      }, (response) => {
+        if (response.uri) {
+          updateAppState( 'imageURI', response.uri )
+          const filename = uuid.v4() + '_todoPhoto.jpg'
+          updateTodoState('image', filename)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  } */
+
+
+
+
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      handleImagePicked(result);
+    }
+  };
+
+
+
+  const takePicture = async () => {
+    // Ask the user for the permission to access the camera
+/*     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    } */
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    // Explore the result
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      console.log(result.uri);
+      handleImagePicked(result);
+    }
+  }
+
+const handleImagePicked = async (pickerResult) => {
+    try {
+      //create a unique name for each picture that is uploaded. get rid of spaces. 
+        // using reg expressions to delete spaces
+       // const imageName =  formState.name.replace(/\s/g, "").toLowerCase();
+      //I decided to keep the original image's name. that way we know it's unique. 
+      
+        const imageName = pickerResult.uri.substr(-40);
+
+        const img = await fetchImageFromUri(pickerResult.uri);
+        const uploadUrl = await uploadImage(imageName, img);
+        console.log('upload url: ' + uploadUrl)
+
+        console.log("original form state: " + formState)
+        //const updateFormImg = {image: uploadUrl}
+        setInput('image', uploadUrl)
+
+        downloadImage(uploadUrl);
+        console.log(formState)
+      
+    } catch (e) {
+      console.log(e);
+      alert('Upload failed');
+    }
+  };
+
+const uploadImage = (filename, img) => {
+    Auth.currentCredentials();
+    console.log('name of photo file: ' + filename)
+    return Storage.put(filename, img, {
+      level: 'public',
+      contentType: 'image/jpeg',
+/*       progressCallback(progress) {
+        setLoading(progress);
+      }, */
+    })
+      .then((response) => {
+        return response.key;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error.response;
+      });
+  };
+
+ const downloadImage = (uri) => {
+    Storage.get(uri)
+      .then((result) => setImage(result))
+      .catch((err) => console.log(err));
+  };
+
+
+  const fetchImageFromUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  };
 
 
 
@@ -88,15 +234,47 @@ async function addApiary(){
             <Text style = {styles.inputLabel}>Location:</Text>
             <TextInput onChangeText = {val => setInput('location', val)} value = {formState.location} style = {styles.textInput}/>
             {/* maybe make this text input dynamically paste the address of the location from a location . using a map button that points to an address. maybe have to set it as a placeholder?*/}
+            
+          </View>
+
+          
+          <View style = {styles.textInputWrapper}>
+            <Text style = {styles.inputLabel}>Photo:</Text>
+            <View style = {{flexDirection: 'row', justifyContent: 'space-around', }}>
+              
+              <View>
+{/*               <TouchableOpacity onpress = {takePicture} style = {styles.buttons} >
+                <Text style = {styles.buttonTxt}>Open Camera</Text>
+                </TouchableOpacity> */}
+                <Button title = "camera" onPress = {takePicture}></Button>
+              </View>
+
+              <View>
+{/*               <TouchableOpacity  onPress={pickImage}  style = {styles.buttons}>
+                 <Text style = {styles.buttonTxt}>Select Image</Text>
+                </TouchableOpacity>   */}
+                <Button title = "Select Image" onPress = {pickImage}></Button>
+              </View>
+     
+
+            </View>
+
+
 
           </View>
- 
-          <View style = {{padding:10}}>
-          <TouchableOpacity onPress = {() =>  addApiary()} style = {styles.submitButton}>
-            <Text style = {styles.submitButtonTxt}>Create Apiary</Text>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+{/*               <Button onPress = {downloadImage(uri)}></Button>
+              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+            </View>
 
-          </TouchableOpacity>
+          <View style = {{ flex: 1, alignItems: 'stretch', paddingHorizontal: 15 }}>
+            <TouchableOpacity onPress = {() =>  addApiary()} style = {styles.submitButton}>
+              <Text style = {styles.buttonTxt}>Create Apiary</Text>
+            </TouchableOpacity>
           </View>
+
+          
 
           </KeyboardAvoidingView>
           </ScrollView>
@@ -162,7 +340,7 @@ const styles = StyleSheet.create({
 
   submitButton:{
     flex:1,
-    alignSelf: 'flex-end',
+   /*  alignSelf: 'flex-end', */
     alignItems:'center',
     padding: 10,
     borderRadius: 5,
@@ -170,12 +348,23 @@ const styles = StyleSheet.create({
     
 
   },
-  submitButtonTxt:{
+  buttonTxt:{
     color:'#4d4d4d', 
     fontWeight: 'bold', 
     fontSize: 16,
 
+  },
+  buttons:{
+      flex: .5,
+     /*  alignSelf: 'flex-end', */
+      alignItems:'center',
+      padding: 10,
+      borderRadius: 5,
+      backgroundColor: '#ffcd24',
+      
+    
   }
+
 });
 
 
