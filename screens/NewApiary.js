@@ -98,7 +98,6 @@ async function addApiary(){
 
 
 
-
 const handleChoosePhoto = async () => { 
   try{
     const result = await ImagePicker. launchImageLibraryAsync({
@@ -139,16 +138,11 @@ const handleTakePhoto = async () => {
 
 
 
-
-
-
-
-
-
   return (
     
       <View style={styles.ScreenParent}>
-          <ScrollView style={styles.listBorder}>
+        <View style = {styles.cardContainer}>
+          <ScrollView style={styles.scrollViewChild}>
           <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
 
           <View style = {styles.textInputWrapper}>
@@ -179,24 +173,19 @@ const handleTakePhoto = async () => {
                 </TouchableOpacity> */}
                 <Button title = "camera" onPress = {handleTakePhoto}></Button>
               </View>
-
               <View>
 {/*               <TouchableOpacity  onPress={pickImage}  style = {styles.buttons}>
                  <Text style = {styles.buttonTxt}>Select Image</Text>
                 </TouchableOpacity>   */}
                 <Button title = "Select Image" onPress = {handleChoosePhoto}></Button>
-              </View>
-     
-
+              </View>    
             </View>
-
-
 
           </View>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
               {imageState.imageURI.blob && <Image source={{ uri: imageState.imageURI }} style={{ width: 200, height: 200 }} />}
-{/*               <Button onPress = {downloadImage(uri)}></Button>
-              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
+
+              {/* {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}  */}
             </View>
 
           <View style = {{ flex: 1, alignItems: 'stretch', paddingHorizontal: 15 }}>
@@ -204,23 +193,16 @@ const handleTakePhoto = async () => {
               <Text style = {styles.buttonTxt}>Create Apiary</Text>
             </TouchableOpacity>
           </View>
-
-          
-
           </KeyboardAvoidingView>
           </ScrollView>
+          </View>
       </View>
   );
 }
 
 
 
-
-
-
 export default NewApiaryScreen;
-
-
 
 
 
@@ -233,11 +215,23 @@ const styles = StyleSheet.create({
     padding:10,
     backgroundColor: '#e6e6e6'
   },
+  cardContainer:{
+    flex:1,
+    backgroundColor: '#FFF',
+    padding:10,
+    margin:10,
+    borderRadius:18,
+    shadowColor: 'black',
+    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    shadowOffset: {width: 0 , height: 4},
+
+  },
 
   scrollViewChild:{
     flexGrow:1,
     flexDirection: 'column',
-    backgroundColor:'#EFEFEF',
+    backgroundColor:'#FFF',
     
   },
   listBorder:{

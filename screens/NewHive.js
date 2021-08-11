@@ -76,9 +76,6 @@
            }
          }
        })();
-
-       
-
      }, []);
    
    
@@ -118,28 +115,7 @@
       }
     }
    
-   
 
-/*      handleTakePhoto = async () =>
-     {
-      try {
-        ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-           allowsEditing: true,
-           aspect: [4, 3],
-           quality: .5,
-        }, (response) => {
-          if (response.uri) {
-            updateAppState( 'imageURI', response.uri )
-            const filename = uuid.v4() + '_hivePhoto.jpg'
-            updateTodoState('image', filename)
-          }
-        })
-      } catch (error) {
-        console.log(error)
-      }
-    }
-       */
       
   const handleChoosePhoto = async () => {
     try {
@@ -183,15 +159,14 @@
     }
 }
   
-
-
-   
-   
+  
    
      return (
        
          <View style={styles.ScreenParent}>
-             <ScrollView style={styles.listBorder}>
+           <View style = {styles.cardContainer}>
+             <ScrollView style={styles.scrollViewChild}>
+               
              <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
    
              <View style = {styles.textInputWrapper}>
@@ -241,33 +216,24 @@
                 
                  <Image source={{ uri: appState.imageURI }} style={{ width: 200, height: 200 }}/>
                  <Text>{appState.imageURI}</Text>
-   {/*               <Button onPress = {downloadImage(uri)}></Button>
-                 {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
                </View>
    
              <View style = {{ flex: 1, alignItems: 'stretch', paddingHorizontal: 15 }}>
-               {/* <TouchableOpacity onPress = {() =>  addHive()} style = {styles.submitButton}> */}
                <TouchableOpacity onPress = {() =>  addHive()} style = {styles.submitButton}>
                  <Text style = {styles.buttonTxt}>Create Hive</Text>
                </TouchableOpacity>
              </View>
    
-             
-   
              </KeyboardAvoidingView>
              </ScrollView>
+             </View>
          </View>
      );
    }
    
    
    
-   
-   
-   
    export default NewHiveScreen;
-   
-   
    
    
    
@@ -280,13 +246,25 @@
        padding:10,
        backgroundColor: '#e6e6e6'
      },
-   
-     scrollViewChild:{
-       flexGrow:1,
-       flexDirection: 'column',
-       backgroundColor:'#EFEFEF',
-       
-     },
+     cardContainer:{
+      flex:1,
+      backgroundColor: '#FFF',
+      padding:10,
+      margin:10,
+      borderRadius:18,
+      shadowColor: 'black',
+      shadowRadius: 10,
+      shadowOpacity: 0.2,
+      shadowOffset: {width: 0 , height: 4},
+  
+    },
+  
+    scrollViewChild:{
+      flexGrow:1,
+      flexDirection: 'column',
+      backgroundColor:'#FFF',
+      
+    },
      listBorder:{
        backgroundColor: '#FFF',
        padding:20,
@@ -338,167 +316,6 @@
          alignItems:'center',
          padding: 10,
          borderRadius: 5,
-         backgroundColor: '#ffcd24',
-         
-       
+         backgroundColor: '#ffcd24',    
      }
-   
    });
-   
-   
-   
-   
-   
-   
-
-
-
-
-/* 
-   async function addHive(){
-
-
-    const {name: fileName, type: mimeType} = file 
-    const key = image
-    const fileForUpload = {
-      bucket, key, region,
-    }
-    const inputData = {formState, image: fileForUpload }
-     try{
-       //saves input form information into an array named Hive
-       const hive = { ...formState}           
-       
-       //clears the formState, so that the rendered screen clears the information in the text boxes. 
-       setFormState(initialState)   
-   
-       console.log(hive)
-
-       await Storage.put(key, file, { contentType: mimeType})
-   
-       //sends the Hive array to the database
-       await API.graphql(graphqlOperation(createHive, {input: hive})) 
-        //navigation.goBack()                   
-       //clears the formState, so that the rendered screen clears the information in the text boxes. 
-       setFormState(initialState)   
-     }
-     catch(error){
-       console.log("error creating Hive", error)
-       
-     }
-   } */
-
-
-
-
-/*    const uploadImage = (filename, img) => {
-    Auth.currentCredentials();
-    
-    return Storage.put(filename, img, {
-      level: 'public',
-      contentType: 'image/jpeg',
-
-    })
-      .then((response) => {
-        return response.key;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error.response;
-      });
-  };
-
- const downloadImage = (uri) => {
-    Storage.get(uri)
-      .then((result) => setImage(result))
-      .catch((err) => console.log(err));
-  };
-
-
-  const fetchImageFromUri = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  }; */
-
-
-
-
-
-     
-/*   const handleImagePicked = async (pickerResult) => {
-    try {
-      //create a unique name for each picture that is uploaded. get rid of spaces. 
-        // using reg expressions to delete spaces
-       // const imageName =  formState.name.replace(/\s/g, "").toLowerCase();
-      //I decided to keep the original image's name. that way we know it's unique. 
-      
-        const imageName = pickerResult.uri.substr(-40);
-
-        const img = await fetchImageFromUri(pickerResult.uri);
-        const uploadUrl = await uploadImage(imageName, img);
-        console.log('upload url: ' + uploadUrl)
-
-        console.log("original form state: " + formState)
-        //const updateFormImg = {image: uploadUrl}
-        
-        setInput('image', uploadUrl)
-
-        downloadImage(uploadUrl);
-        console.log(formState)
-      
-    } catch (e) {
-      console.log(e);
-      alert('Upload failed');
-    }
-  };
- */
-
-
-
-
-  /*    
-     const pickImage = async () => {
-       let result = await ImagePicker.launchImageLibraryAsync({
-         mediaTypes: ImagePicker.MediaTypeOptions.All,
-         allowsEditing: true,
-         aspect: [4, 3],
-         quality: 1,
-       });
-   
-       console.log(result);
-   
-       if (!result.cancelled) {
-         setImage(result.uri);
-        // handleImagePicked(result);
-       }
-     }; */
-   
-
-/*    
-     const takePicture = async () => {
-       // Ask the user for the permission to access the camera
-
-   
-       const result = await ImagePicker.launchCameraAsync();
-   
-       // Explore the result
-       console.log(result);
-   
-       if (!result.cancelled) {
-         setImage(result.uri);
-         console.log(result.uri);
-        // handleImagePicked(result);
-       }
-     }
- */
-
-   
-   
-   
-/* 
-
-    function setInput(key, value){
-      // I think this appends the input data from the TextInput into the form, using the formState update function 
-      setFormState({ ...formState, [key]:value})
-    }
- */

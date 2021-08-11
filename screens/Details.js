@@ -59,11 +59,9 @@ export default DetailsScreen = ({route, navigation}) => {
         hive.image = imageKey
         return hive;
       }))
-      console.log(hivesData)
       setHives(hivesData)
 
       
-
     }
     catch(error){
     console.log("error on fetching apiary hives")
@@ -113,8 +111,6 @@ export default DetailsScreen = ({route, navigation}) => {
       </View>
      
             <TouchableOpacity onPress={() => {navigation.push('New Hive', {currentApiary:selectedApiaryData});}}style = {styles.addItemButton}> 
-            {/* <TouchableOpacity onPress={() => {navigation.push('New Hive', {selectedApiaryData:item, navBarName: item.name});}}style = {styles.addItemButton}>  */}
-           {/*  <TouchableOpacity onPress={() => navigation.navigate('New Hive')} style = {styles.addItemButton}>  */}
               <View style={styles.addButton}>
                 <Text style={styles.buttonText}>+</Text>
               </View> 
@@ -167,7 +163,6 @@ const styles = StyleSheet.create({
   },
 
 
-
   addButton:{
     width: 60,
     height: 60,
@@ -189,8 +184,6 @@ const styles = StyleSheet.create({
     color:'#FFF',
     fontSize:30,
     alignSelf:'center',    /*centers the plus sign */
-      
-
   },
 
 
