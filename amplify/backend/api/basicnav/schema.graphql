@@ -28,6 +28,7 @@ type Apiary @model  @auth(rules: [ { allow: owner, ownerField: "owner", operatio
   description: String
   location: String
   image: String
+
    hives: [Hive] @connection(keyName: "byApiary", fields: ["id"])
 }
 
@@ -43,6 +44,5 @@ type Hive @model @auth(rules: [ { allow: owner, ownerField: "owner", operations:
 
 
 }
-
 
 
