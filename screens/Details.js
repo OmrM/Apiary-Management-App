@@ -55,8 +55,7 @@ export default DetailsScreen = ({route, navigation}) => {
 
       //for all hivesData get the pre-signed url and store in images field
       hivesData = await Promise.all(hivesData.map(async (hive) => {
-        const imageKey = await Storage.get(hive.image, {level: 'private'})
-        
+        const imageKey = await Storage.get(hive.image, {level: 'private'})   
         hive.image = imageKey
         return hive;
       }))
@@ -64,11 +63,7 @@ export default DetailsScreen = ({route, navigation}) => {
       setHives(hivesData)
 
       
- /*      console.log("\n")
-      console.log(hivesData)
-      
-      //update the state variable to display the hive data
-      updateHives(hivesData)  */
+
     }
     catch(error){
     console.log("error on fetching apiary hives")

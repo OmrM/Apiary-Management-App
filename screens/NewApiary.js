@@ -14,24 +14,41 @@ import { API, graphqlOperation, Storage} from 'aws-amplify';
 import {createApiary} from '../src/graphql/mutations';
 import * as ImagePicker from 'expo-image-picker';
 import Auth from '@aws-amplify/auth';
+import { ConsoleLogger } from '@aws-amplify/core';
+import uuid from 'react-native-uuid';
+
 /* initial state of form Data: blank text boxes  */
 const initialState = {name: '', description: '', location: '', image: ''}
-const initialAppState = {showForm: false, imageURI: ''}
+const initialImageState = {showForm: false, imageURI: ''}
 
 const NewApiaryScreen = ({navigation}) => {
 
-  /* create an empty array in our state called albums. usestate returns data and function that can change that data(updateAlbums) */
-  const [albums, updateAlbums] = useState([])
+  /* create an empty array in our state called formState. usestate returns data and function that can change that data(setFormState) */
 
   const [formState, setFormState] = useState(initialState)
-  
-  const [image, setImage] = useState(null);
+  const [apiaryState, setApiaryState] = useState([])
+  const [imageState, setImageState] = useState(initialImageState);
 
 
+
+  //STATE updater functions: 
+  function updateFormState(key, value){
+    setFormState({ ...formState, [key]: value})
+  }
+
+  function updateImgState(key, value){
+    setImageState({ ...imageState, [key]: value})
+  }
+
+/*   function setInput(key, value){
+    /// I think this appends the input data from the TextInput into the form, using the formState update function 
+    setFormState({ ...formState, [key]:value})
+  }
+ */
   useEffect(() => {
     //check to make sure app has permission to access user's camera roll and to camera 
     //https://forums.expo.dev/t/imagepicker-not-opening-in-android-production-builds-works-fine-in-expo-client-app/37878
-    //wasn't asking for camera permissions at first. 
+   
     (async () => {
       if (Platform.OS !=='web') {
         const cameraRollStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -47,38 +64,30 @@ const NewApiaryScreen = ({navigation}) => {
   
   
   }, []);
-
-
-  async function getData(){
-    try{
-      const albumData = await API.graphql(graphqlOperation(listAlbums));
-      console.log(albumData);  
-    }
-    catch(error){
-      console.log("error on fetching")
-    }
-  }
-
-
-function setInput(key, value){
-  /* I think this appends the input data from the TextInput into the form, using the formState update function */
-  setFormState({ ...formState, [key]:value})
-}
   
 
 
 async function addApiary(){
   try{
     //saves input form information into an array named apiary
-    const apiary = { ...formState}           
-    
+    const photo = await fetch(imageState.imageURI)
+    const photoBlob = await photo.blob();
+    await Storage.put(formState.image, photoBlob, {
+      level: 'private',
+      contentType: 'image/jpg'
+    })    
+      
+    const apiary = { ...formState}
+    //adding new data to the apiary form state
+    setApiaryState([ ...apiaryState, apiary])
+    console.log('creating apiary: ' + apiary)
+    //sends the apiary info to the database
+    await API.graphql(graphqlOperation(createApiary, {input: apiary}))
     //clears the formState, so that the rendered screen clears the information in the text boxes. 
-    setFormState(initialState)   
+    setFormState(initialState) 
+    //clears image state so that it doesnt display the image again when reloading the screen  
+    setImageState(initialImageState)
 
-    console.log(apiary)
-
-    //sends the apiary array to the database
-    await API.graphql(graphqlOperation(createApiary, {input: apiary})) 
     navigation.goBack()                   
   }
   catch(error){
@@ -90,129 +99,46 @@ async function addApiary(){
 
 
 
-
-
-
-/* handleChoosePhoto = async () =>
-   {
-    try {
-      launchImageLibrary({
-        mediaType: 'photo',
-        includeBase64: false,
-        maxHeight: 200,
-        maxWidth: 200,
-      }, (response) => {
-        if (response.uri) {
-          updateAppState( 'imageURI', response.uri )
-          const filename = uuid.v4() + '_todoPhoto.jpg'
-          updateTodoState('image', filename)
-        }
-      })
-    } catch (error) {
-      console.log(error)
+const handleChoosePhoto = async () => { 
+  try{
+    const result = await ImagePicker. launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: .5
+    })
+    if(!result.cancelled){
+      console.log('uri: ' + result.uri)
+      updateImgState('imageURI', result.uri)
+      const fileName = uuid.v4() + '_apiaryPhoto.jpg'
+      updateFormState('image', fileName)
+      }
+  } catch(error){
+    console.log(error)
     }
-  } */
+}
 
-
-
-
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+const handleTakePhoto = async () => {
+  try{
+    const result = await ImagePicker.launchCameraAsync(({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-      handleImagePicked(result);
+      aspect: [4,2],
+      quality: .5,
+    }));
+    if(!result.cancelled) {
+      console.log('uri: ' + result.uri)
+      updateImgState('imageURI', result.uri)
+      const filename = uuid.v4() + '_ApiaryPhoto.jpg'
+      updateFormState('image', filename)
     }
-  };
-
-
-
-  const takePicture = async () => {
-    // Ask the user for the permission to access the camera
-/*     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
-      return;
-    } */
-
-    const result = await ImagePicker.launchCameraAsync();
-
-    // Explore the result
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-      console.log(result.uri);
-      handleImagePicked(result);
-    }
+  } catch (error){
+    console.log(errror)
   }
-
-const handleImagePicked = async (pickerResult) => {
-    try {
-      //create a unique name for each picture that is uploaded. get rid of spaces. 
-        // using reg expressions to delete spaces
-       // const imageName =  formState.name.replace(/\s/g, "").toLowerCase();
-      //I decided to keep the original image's name. that way we know it's unique. 
-      
-        const imageName = pickerResult.uri.substr(-40);
-
-        const img = await fetchImageFromUri(pickerResult.uri);
-        const uploadUrl = await uploadImage(imageName, img);
-        console.log('upload url: ' + uploadUrl)
-
-        console.log("original form state: " + formState)
-        //const updateFormImg = {image: uploadUrl}
-        setInput('image', uploadUrl)
-
-        downloadImage(uploadUrl);
-        console.log(formState)
-      
-    } catch (e) {
-      console.log(e);
-      alert('Upload failed');
-    }
-  };
-
-const uploadImage = (filename, img) => {
-    Auth.currentCredentials();
-    /* console.log('name of photo file: ' + filename) */
-    return Storage.put(filename, img, {
-      level: 'public',
-      contentType: 'image/jpeg',
-/*       progressCallback(progress) {
-        setLoading(progress);
-      }, */
-    })
-      .then((response) => {
-        return response.key;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error.response;
-      });
-  };
-
- const downloadImage = (uri) => {
-    Storage.get(uri)
-      .then((result) => setImage(result))
-      .catch((err) => console.log(err));
-  };
+}
 
 
-  const fetchImageFromUri = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
+
 
 
 
@@ -227,17 +153,17 @@ const uploadImage = (filename, img) => {
 
           <View style = {styles.textInputWrapper}>
             <Text style = {styles.inputLabel}>Name:</Text>
-            <TextInput onChangeText = {val => setInput('name', val)} value = {formState.name} style = {styles.textInput}/>
+            <TextInput onChangeText = {val => updateFormState('name', val)} value = {formState.name} style = {styles.textInput}/>
           </View>
 
           <View style = {styles.textInputWrapper}>
             <Text style = {styles.inputLabel}>Description:</Text>
-            <TextInput onChangeText = {val => setInput('description', val)} value = {formState.description} style = {styles.textInput}/>
+            <TextInput onChangeText = {val => updateFormState('description', val)} value = {formState.description} style = {styles.textInput}/>
           </View>
 
           <View style = {styles.textInputWrapper}>
             <Text style = {styles.inputLabel}>Location:</Text>
-            <TextInput onChangeText = {val => setInput('location', val)} value = {formState.location} style = {styles.textInput}/>
+            <TextInput onChangeText = {val => updateFormState('location', val)} value = {formState.location} style = {styles.textInput}/>
             {/* maybe make this text input dynamically paste the address of the location from a location . using a map button that points to an address. maybe have to set it as a placeholder?*/}
             
           </View>
@@ -251,14 +177,14 @@ const uploadImage = (filename, img) => {
 {/*               <TouchableOpacity onpress = {takePicture} style = {styles.buttons} >
                 <Text style = {styles.buttonTxt}>Open Camera</Text>
                 </TouchableOpacity> */}
-                <Button title = "camera" onPress = {takePicture}></Button>
+                <Button title = "camera" onPress = {handleTakePhoto}></Button>
               </View>
 
               <View>
 {/*               <TouchableOpacity  onPress={pickImage}  style = {styles.buttons}>
                  <Text style = {styles.buttonTxt}>Select Image</Text>
                 </TouchableOpacity>   */}
-                <Button title = "Select Image" onPress = {pickImage}></Button>
+                <Button title = "Select Image" onPress = {handleChoosePhoto}></Button>
               </View>
      
 
@@ -268,7 +194,7 @@ const uploadImage = (filename, img) => {
 
           </View>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+              {imageState.imageURI.blob && <Image source={{ uri: imageState.imageURI }} style={{ width: 200, height: 200 }} />}
 {/*               <Button onPress = {downloadImage(uri)}></Button>
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
             </View>

@@ -55,19 +55,16 @@
      useEffect(() => {
        //check to make sure app has permission to access user's camera roll and to camera 
        //https://forums.expo.dev/t/imagepicker-not-opening-in-android-production-builds-works-fine-in-expo-client-app/37878
-       //wasn't asking for camera permissions at first. buggy if I use touchable opacity 
-       (async () => {
+       //wasn't asking for camera permissions at first. buggy if I use touchable opacity to take pictures
+       (async () => {    
 
-                 
- /*        const apiaryData = await API.graphql(graphqlOperation(getApiary, {id: currentApiary.id}))
-        
-        const hivesData = apiaryData.data.getApiary.hives.items */
-        console.log("Current Apiary: " + currentApiary.id)
+       
         
         console.log("\n")
+        //updateFormState("ApiaryID: ", currentApiary.id)
         updateFormState("ApiaryID", currentApiary.id)
         console.log("updating apiary id: " + formState.ApiaryID)
-        
+        console.log(formState)
          if (Platform.OS !=='web') {
            const cameraRollStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
            const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
@@ -105,10 +102,12 @@
         
         //adding new data to hive State
         setHiveState([...hiveState, hive])
-        console.log('creating hive: ' + hive)
-        //sends the Hive array to the database
+        
+        console.log('creating hive: ' + hive.ApiaryID)
+        //sends the Hive info to the database
         await API.graphql(graphqlOperation(createHive, {input: hive})) 
         
+        //clearing state for the new hive form and for the image
         setFormState(initialFormState)
         setAppState(initialAppState)
 
@@ -142,8 +141,7 @@
     }
        */
       
-  const handleChoosePhoto = async () =>
-   {
+  const handleChoosePhoto = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -157,8 +155,7 @@
         const filename = uuid.v4() + '_hivePhoto.jpg'
         console.log(filename)
         updateFormState('image', filename)
-      }
-      
+      }     
     } catch (error) {
       console.log(error)
     }
@@ -176,7 +173,7 @@
   
       if (!result.cancelled) {
         console.log('uri: ' + result.uri)
-        updateAppState( 'imageURI', result.uri )
+        updateAppState('imageURI', result.uri )
         const filename = uuid.v4() + '_hivePhoto.jpg'
         updateFormState('image', filename)
       }
@@ -187,49 +184,7 @@
 }
   
 
-/* const handleChoosePhoto = async () =>
-{
- try {
-   ImagePicker.launchImageLibraryAsync({
-     mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: .5,
-   }, (response) => {
-     if (response.uri) {
-       updateAppState( 'imageURI', response.uri )
-       const filename = uuid.v4() + '_hivePhoto.jpg'
-       updateFormState('image', filename)
-     }
-   })
- } catch (error) {
-   console.log(error)
- }
-}
-   
-    */
 
-/*   const handleTakePhoto = async () =>
-  {
-   try {
-     ImagePicker.launchCameraAsync({
-       mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: .5,
-     }, (response) => {
-       if (response.uri) {
-         console.log(response.uri)
-         updateAppState( 'imageURI', response.uri )
-         const filename = uuid.v4() + '_hivePhoto.jpg'
-         updateFormState('image', filename)
-       }
-     })
-   } catch (error) {
-     console.log(error)
-   }
- }
-    */
    
    
    
