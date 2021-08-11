@@ -18,6 +18,16 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
     /* creates an empty array in our state called albums. usestate returns data and function that can change that data(updateAlbums) */
     const [albums, updateAlbums] = useState([])
     const [apiaries, updateApiaries] = useState([])
+
+
+    //refresh control state and refresh method. I don't really understand this. lol
+    const[refreshing, setRefreshing] = useState(false);
+    const onRefresh = React.useCallback(() => {
+     setRefreshing(true);
+     getApiaries();
+     wait(1000).then(() => setRefreshing(false));
+     
+   }, []);    
     
   
     useEffect( () => {
@@ -58,14 +68,7 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
 
     
 
-    //refresh control state and refresh method. I don't really understand this. lol
-    const[refreshing, setRefreshing] = useState(false);
-    const onRefresh = React.useCallback(() => {
-     setRefreshing(true);
-     getApiaries();
-     wait(1000).then(() => setRefreshing(false));
-     
-   }, []);
+
 
    const handleAddTask = () => {
     console.log('owo');
@@ -79,8 +82,12 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
     )
   }
 
-
-
+/*   const downloadImage = (uri) => {
+    Storage.get(uri)
+      .then((result) => setImage(result))
+      .catch((err) => console.log(err));
+  };
+ */
 
 
     return (
@@ -96,10 +103,17 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
             navigation.navigate('RouteName', { /* params go here  })
             from: https://reactnavigation.org/docs/params/  
         */
-        <TouchableOpacity onPress={() => {navigation.push('Details', {selectedApiaryData:item, navName: item.name});}} style = {styles.listItemButton}>
-          <Text style = {styles.itemTitle}>{item.name}</Text>
-          <Text style = {styles.itemSubTitle}>{item.description}</Text>
-          {<Image source={{ uri: 'https://basicnave598a12f03ec47ca9928f22e6cb80f2b130106-dev.s3.amazonaws.com/public/37013423-F0C3-4361-878C-6DF485BAC7D4.jpg' }} style={{ width: 20, height: 20 }} />}
+        <TouchableOpacity onPress={() => {navigation.push('Details', {selectedApiaryData:item, navBarName: item.name});}} style = {styles.listItemBttn}>
+          <View style = {styles.listItemBttnSub}>
+            {<Image source={{ uri: 'https://basicnave598a12f03ec47ca9928f22e6cb80f2b130106-dev.s3.us-east-1.amazonaws.com/public/C893B47F-44FE-4E97-9EF7-1968F7BAC79A.jpg?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIBU6JOKJz5j8ulyuKZGFg7rho8mzKkT0kf9%2BVT74UItDAiEAwPkjJNsBJ77kAiiFPdXpTmkW%2FHqoQobFIiUbscIkMB8q%2FwIIov%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw0OTc3MDM0MDc3MzEiDPeI95tFE0k7CL9vTSrTAr7HMVEyHQyMtKzIncoY5U1%2BGTyOJ5XfxbPFCMDa%2B6sgbnXco1o1Stu%2FeiZgrEU93uUrXOUIWaq61D2Hk7cc3ZSux5j%2FuJGCVlHXiw31lRZ97Kne6On5s8MAhYTG2DxeHi8t96P%2BLCLqz5magHUwNIMWarsvOvIhJ6t7Qk0rM6bA9l4u57W%2BNoJVHutxlj43JvCxEocquzyO4aEyJrjzI1w9y5FyEZTW%2FS9QpJTTsPHWpeqooni9PDQ54Zhjp0r%2F4q4TGQObUREW0EWtsCX2x2IOgefZ2ddr%2Fx5fYhYJCoe5PuiipfgvJr2%2FYx6NcBz%2FrBV9LyOoXlHoKcpjgUmdtRAmL3vW5%2BWpgVpQMypKHYbhPThW%2Bf85aT6f3n36dfX9lRWfyuXC0VTlEtTAHXZ1we%2FwHYygfCNzEA4LNkX6P9UydxfUEmXsrm6Qg%2FZk7IUjpllPajDQuI6IBjqzArTySm3rB7bEdblCjCBgmHHbFwTx949zG0rhNslW625G4oNOCcLq0KJ4%2Fps6bY2%2BwnbMnoppNcIhtbPbVK99%2BD3x%2FAd5M41lIAErm44U%2BRZ63hnQH30qk30Mpl70t4kAfEEu1HkkIVFdBeIR8VPy7CXaJIfWTF97eWCvs63fuFByYugpVkYI4zBN6RZSiyqPKo8LbyqaT3L%2FOpJ9yCNbzxDd7c5krYvMvYMr4BmH27o9OoW%2BsxS5C70NihvBCPT6Hz0JEjLxAsPWEHrQzk4ziHkBCbk2UOfR00C1neAqFQrCUrdU1nkdnKKubt8C%2F4Y7XIot83cXcy1gREB8NtwKbHCC9fkvQB22u0aiN66gXLuBoNs8C50X6ycgmB17w1rRJ94cUW0gLOS3SCaZD%2F0J0r1%2BGCs%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210730T105329Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAXHYLPKBZ3ZSKCS4M%2F20210730%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=1bc1d6eaee584fee4b088ae4943c4a83083d0c5e68bda2f9717e1cba3bdf5f7c' }} style={{ width: 50, height: 50, borderRadius: 40, borderWidth:1, borderColor: 'gray', backgroundColor: '#d4d4d4'}} />}
+          </View>
+          
+          <View style = {styles.listItemBttnSub}>
+            <Text style = {styles.itemTitle}>{item.name}</Text>
+            <Text style = {styles.itemSubTitle}>{item.description}</Text>
+          </View>
+          
+          
 
         </TouchableOpacity>
         } 
@@ -149,12 +163,20 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
       padding:10,
       margin:10,
       borderRadius:18,
+      shadowColor: 'black',
+      shadowRadius: 10,
+      shadowOpacity: 0.2,
+      shadowOffset: {width: 0 , height: 4},
 
     },
-    listItemButton:{
+    listItemBttn:{
+      flexDirection: 'row',
+      padding: 10,
+      
+    },
+    listItemBttnSub:{
       padding: 15,
     },
-
     addButton:{
 /*       width: 60,
       height: 60,

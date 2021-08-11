@@ -44,6 +44,8 @@ const NewApiaryScreen = ({navigation}) => {
         }
       }
     })();
+  
+  
   }, []);
 
 
@@ -182,7 +184,7 @@ const handleImagePicked = async (pickerResult) => {
 
 const uploadImage = (filename, img) => {
     Auth.currentCredentials();
-    console.log('name of photo file: ' + filename)
+    /* console.log('name of photo file: ' + filename) */
     return Storage.put(filename, img, {
       level: 'public',
       contentType: 'image/jpeg',
@@ -211,6 +213,9 @@ const uploadImage = (filename, img) => {
     const blob = await response.blob();
     return blob;
   };
+
+
+
 
 
 

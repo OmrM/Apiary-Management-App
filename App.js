@@ -8,6 +8,7 @@ import DrawerNavigator from "./navigation/DrawerNavigator"
 import Amplify from 'aws-amplify';
 import awsconfig from '/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/src/aws-exports.js';
 import{withAuthenticator} from 'aws-amplify-react-native';
+import uuid from 'react-native-uuid';
 /* import { SafeAreaInsetsContext } from 'react-native-safe-area-context'; */
 /* Amplify.configure(config); */
 

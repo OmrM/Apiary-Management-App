@@ -20,7 +20,7 @@ const MainStackNavigator = () =>{
    })}>
 
     {/* route is specified using Screen component */}
-    {/* screen accepts name prop (of route used to nav) and component prop (cor. to the component it'll render)*/}
+    {/* screen accepts name prop (of route used to nav) and component prop (corresponding to the component it'll render)*/}
 
     <Stack.Screen name="Home" component={Home} options={({navigation}) => ({
         title: 'Apiaries', headerRight:()=><Button onPress={()=> alert('OwO')} title='owo' color='#fff'/>,
@@ -30,8 +30,8 @@ const MainStackNavigator = () =>{
         </TouchableOpacity>
     })}/>
     {/* using options to dynamically change the title on the navigation bar */}
-    <Stack.Screen name="Details" component={DetailsScreen} options = {({route}) => ({title: route.params.navName})} />
-    <Stack.Screen name="New Hive" component={NewHiveScreen} />
+    <Stack.Screen name="Details" component={DetailsScreen} options = {({route}) => ({title: route.params.navBarName})} />
+    <Stack.Screen name="New Hive" component={NewHiveScreen} options = {({route}) => ({title: route.params.navBarName})}/>
     <Stack.Screen name="New Apiary" component={NewApiaryScreen}/>
    
   </Stack.Navigator>
