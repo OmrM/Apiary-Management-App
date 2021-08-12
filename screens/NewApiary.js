@@ -66,7 +66,7 @@ const NewApiaryScreen = ({navigation}) => {
   }, []);
   
 
-
+//code to upload and download images from : https://github.com/deekob/amplify-react-native-storage/blob/completed/App.js
 async function addApiary(){
   try{
     //saves input form information into an array named apiary

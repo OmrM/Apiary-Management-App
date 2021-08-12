@@ -13,23 +13,28 @@ import {listHives, getHive, listApiarys, getApiary} from '../src/graphql/queries
 export default DetailsScreen = ({route, navigation}) => {
   const [hives, setHives] = useState([])
 
-    //refresh control state and refresh method. I don't really understand this. lol
-    const[refreshing, setRefreshing] = useState(false);
-    const onRefresh = React.useCallback(() => {
-     setRefreshing(true);
-     getHives();
-     wait(1000).then(() => setRefreshing(false));
-     
-   }, []);  
+  //apiary id being sent from the apiary screen. I can use apiary.id to query the db for that apiary's hives
+  const {selectedApiaryData} = route.params;
+  
+  function updateHivesState(key, value) {
+    setHives({...hives, [key]: value})
+  }
+
+  //refresh control state and refresh method. 
+  const[refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(() => {
+     etRefreshing(true);
+    getHives();
+    wait(1000).then(() => setRefreshing(false));   
+  }, []);  
 
   
 
- /*  useEffect( () => { */
-    /* listener method from https://stackoverflow.com/questions/46504660/refresh-previous-screen-on-goback. original useffect: */
-    useEffect( () => {
-      /* useEffect (or componentDidMount() in class implmentation) is triggered when the component renders */
-      /* listener method from https://stackoverflow.com/questions/46504660/refresh-previous-screen-on-goback. original useffect: */
-      /*useEffect(() => {getApiaries()}, []) */
+ 
+  //useEffect (or componentDidMount() in class implmentation) is triggered when the component renders */
+  ///listener method. autorefreshes when navigating back to this page. from https://stackoverflow.com/questions/46504660/refresh-previous-screen-on-goback. original useffect: 
+  //useEffect(() => {getApiaries()}, [])
+  useEffect( () => {
        getHives();
        const willFocusSubscription = navigation.addListener('focus', () => {
         getHives();
@@ -38,13 +43,8 @@ export default DetailsScreen = ({route, navigation}) => {
       }, [] );
       const wait = (timeout)=>{
         return new Promise(resolve=> setTimeout(resolve, timeout));
-      }
-  //apiary id being sent from the apiary screen. I can use apiary.id to query the db for that apiary's hives
-  const {selectedApiaryData} = route.params;
-  
-  function updateHivesState(key, value) {
-    setHives({...hives, [key]: value})
   }
+
 
 
   async function getHives(){
