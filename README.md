@@ -1,7 +1,7 @@
 # Apiary Management app
 This project is a work-in-progress. 
 It's a beekeeping app made with React Native and the AWS SDK. 
-I'm trying to stick to using Hooks and functional programming for this project, which has been a struggle because a lot of examples and documentation online use class-based implementations. I am still refactoring code while working on adding features so, some of my code is still a little disorganized and redundant. I still need to modularize a lot of my components and their styles, but all this is on my Kanban board. 
+I'm trying to stick to using Hooks and functional programming for this project, which has been a struggle because a lot of examples and documentation online use class-based implementations. I am still refactoring code while working on adding features so, some of my code is still a little disorganized and redundant. I still need to modularize a lot of my components and their styles, but all this is on the to-do section of my Kanban board. 
 
 
 ![Alt Text](https://github.com/OmrM/Apiary-Management-App/blob/main/Demo%20Images/HomePage.png)
