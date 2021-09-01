@@ -131,7 +131,7 @@ export default HivesScreen = ({navigation}) =>{  /*navigation prop is passed int
   
        
           <View>
-            <TouchableOpacity onPress={() => navigation.navigate('New Apiary')} style = {styles.addItemButton}> 
+            <TouchableOpacity onPress={() => navigation.navigate('New Hive')} style = {styles.addItemButton}> 
               <View style={styles.addButton}>
                 <Text style={styles.buttonText}>+</Text>
               </View> 

@@ -36,7 +36,7 @@ const HiveStackNavigator = () =>{
     <Stack.Screen name="Details" component={DetailsScreen} options = {({route}) => ({title: route.params.navBarName})} />
     <Stack.Screen name="Hive Details" component={HiveDetailsScreen} options = {({route}) => ({title: route.params.navBarName})} />
     <Stack.Screen name="New Hive" component={NewHiveScreen} options = {({route}) => ({title: route.params.navBarName})}/>
-    <Stack.Screen name="New Apiary" component={NewApiaryScreen}/>
+    {/* <Stack.Screen name="New Apiary" component={NewApiaryScreen}/> */}
   {/*   <Stack.Screen name = "Hives" component = {Hives} /> */}
    
   </Stack.Navigator>
