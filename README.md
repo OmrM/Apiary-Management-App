@@ -13,3 +13,4 @@ Data is stored in a DynamoDB NoSQL Database, which is accessed and edited throug
 ## Image Upload: 
 Users are able to upload images of their apiaries and hives which are stored onto an amazon S3 bucket. 
 They are privately accessed using a presigned URL.  
+![Alt Text](https://github.com/OmrM/Apiary-Management-App/tree/main/Demo-Images/ExpoImagePicker.png)
