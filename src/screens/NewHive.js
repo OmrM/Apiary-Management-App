@@ -11,10 +11,10 @@
    import { useState,useEffect } from 'react';
    import { ScrollView } from 'react-native-gesture-handler';
    import { API, graphqlOperation, Storage} from 'aws-amplify';
-   import {createHive, getApiary} from '../src/graphql/mutations';
+   import {createHive, getApiary} from '../graphql/mutations';
    import * as ImagePicker from 'expo-image-picker';
    import Auth from '@aws-amplify/auth';
-   import config from '../src/aws-exports';
+   import config from '../aws-exports';
    import uuid from 'react-native-uuid';
    const {
     aws_user_files_s3_bucket_region: region,
@@ -123,7 +123,7 @@
         mediaTypes: ImagePicker.MediaTypeOptions.All,
          allowsEditing: true,
          aspect: [4, 3],
-         quality: .5,
+         quality: .2,
       })
       if (!result.cancelled) {
         console.log('uri: ' + result.uri)

@@ -11,7 +11,7 @@ import React from 'react';
 import { useState,useEffect } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { API, graphqlOperation, Storage} from 'aws-amplify';
-import {createApiary} from '../src/graphql/mutations';
+import {createApiary} from '../graphql/mutations';
 import * as ImagePicker from 'expo-image-picker';
 import Auth from '@aws-amplify/auth';
 import { ConsoleLogger } from '@aws-amplify/core';
@@ -104,7 +104,7 @@ const handleChoosePhoto = async () => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: .5
+        quality: .2
     })
     if(!result.cancelled){
       console.log('uri: ' + result.uri)
@@ -123,7 +123,7 @@ const handleTakePhoto = async () => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4,2],
-      quality: .5,
+      quality: .2,
     }));
     if(!result.cancelled) {
       console.log('uri: ' + result.uri)

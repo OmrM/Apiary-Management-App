@@ -2,9 +2,11 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { MainStackNavigator } from "./MainStackNavigator";
-import AccountScreenNavigator from "../screens/Account";
+import AccountScreenNavigator from "/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/src/screens/Account.js";
 import Details from "../screens/Details";
 import { withSSRContext } from "aws-amplify";
+import BottomTabNavigator from "./BottomTabNavigator";
+
 /* need named import for the accountScreenNavigator 
 import AccountScreen from "../screens/Account";*/
 
@@ -17,10 +19,18 @@ const DrawerNavigator = () => {
 
     <Drawer.Navigator initialRouteName= "Home"  drawerStyle={styles.drawer} drawerContentOptions={{activeTintColor:'#2AABE4', inactiveTintColor:'#787878'}}>
 
+      <Drawer.Screen name = "Home" component = {BottomTabNavigator}
       
-      <Drawer.Screen name = "Home" component={MainStackNavigator}/>
-      <Drawer.Screen name="Account" component={AccountScreenNavigator} />
-     
+      
+      />
+      {/* needed to move the MainStackNavigator inside of the tabs navigator */}
+      {/* <Drawer.Screen name = "Home" component={MainStackNavigator}/> */}
+    
+      <Drawer.Screen name="Account" component={AccountScreenNavigator} 
+      
+      
+      />
+      
           
 
     </Drawer.Navigator>

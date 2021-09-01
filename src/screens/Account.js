@@ -36,7 +36,7 @@ const AccountScreenNavigator = ({navigation}) =>{
       </Stack.Navigator>
     </NavigationContainer>
 );
-}
+}     
 
 
 function AccountAuth(props){

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import DrawerNavigator from "./navigation/DrawerNavigator"
+import DrawerNavigator from "/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/src/navigation/DrawerNavigator.js"
 
 import Amplify from 'aws-amplify';
 import awsconfig from '/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/src/aws-exports.js';
@@ -30,6 +30,7 @@ const App = () =>{
     <NavigationContainer>
 
       <DrawerNavigator/>
+      
           
 
     </NavigationContainer>

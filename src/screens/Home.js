@@ -2,13 +2,14 @@
 import React from 'react';
 import { View, Text, Button, TouchableOpacity, ScrollView, StyleSheet,FlatList, RefreshControl, Image} from 'react-native';
 import { useState,State,initialFormState,useEffect } from 'react';
-import ApiaryComponent from '../components/ApiaryComponent';
+
 import { API, graphqlOperation, Storage} from 'aws-amplify';
 /* import * as queries from '../src/graphql/queries'; */
-import {listAlbums, listApiarys} from '../src/graphql/queries';
+import {listAlbums, listApiarys} from '../graphql/queries';
 
-
-
+import CachedImage from 'react-native-expo-cached-image';
+/*  import SvgComponent from '../assets/apiaryicon';
+import SvgUri from 'react-native-svg'; */
 
 /* const HomeScreen = ({navigation}) =>{ */
 export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into every screen component */
@@ -95,6 +96,13 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
       <View style={styles.homeScreenParent}>
 
       <View style={styles.cardContainer}>
+{/*       <SvgUri
+    width="100%"
+    height="100%"
+    uri="/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/assets/noun_hive.svg"
+  /> */}
+       
+        
       <FlatList data = {apiaries} 
       
         renderItem={
@@ -103,9 +111,11 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
             navigation.navigate('RouteName', { /* params go here  })
             from: https://reactnavigation.org/docs/params/  
         */
-        <TouchableOpacity onPress={() => {navigation.push('Details', {selectedApiaryData:item, navBarName: item.name});}} style = {styles.listItemBttn}>
+      
+        <TouchableOpacity onPress={() => {navigation.push('Details', {selectedApiaryData:item, navBarName: item.name, image: item.image});}}  style = {styles.listItemBttn}>
           <View style = {styles.listItemBttnSub}>
-            {<Image source={{ uri: item.image }} style={{ width: 50, height: 50, borderRadius: 40, borderWidth:1, borderColor: 'gray', backgroundColor: '#d4d4d4'}} />}
+           {/*  <Image defaultSource = {require('/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/assets/beewellApiary.jpg')} source={{ uri: item.image }} style={{ width: 50, height: 50, borderRadius: 40, borderWidth:1, borderColor: 'gray', backgroundColor: '#d4d4d4'}} /> */}
+            <CachedImage defaultSource = {require('/Users/omarmuniz/Documents/React Native/BasicNavigationAWS/BasicNav/assets/beewellApiary.jpg')} source={{ uri: item.image }} style={{ width: 50, height: 50, borderRadius: 40, borderWidth:1, borderColor: 'gray', backgroundColor: '#d4d4d4'}} />
           </View>
           
           <View style = {styles.listItemBttnSub}>
@@ -152,7 +162,7 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
       flexGrow:1,
       flexDirection: 'column',
       paddingBottom:0,
-      padding:10,
+      padding:2,
       backgroundColor: '#e6e6e6'
     },
   
@@ -194,7 +204,7 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
       borderColor: '#C0C0C0',
       position: 'absolute',
       right: 30,
-      bottom: 60,
+      bottom: 30,
       shadowColor: 'black',
       shadowRadius: 10,
       shadowOpacity: 0.2,
@@ -225,7 +235,7 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
     
     }, 
     addItemButton:{
-      padding:15,
+      padding:0,
       
 
     }
