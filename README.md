@@ -2,7 +2,7 @@
 THIS IS A WORK IN PROGRESS. 
 Beekeeping app made with React Native and the AWS SDK. 
 I'm trying to stick to using Hooks and functional programming for this project. 
-
+![Alt Text](https://github.com/OmrM/Apiary-Management-App/blob/main/Demo%20Images/HomePage.png)
 # Features:
 ## User Authentication: 
 AWS cognito allows users to make an account and access their data. 
