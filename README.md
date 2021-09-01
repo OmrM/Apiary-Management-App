@@ -27,3 +27,11 @@ They are privately accessed using a presigned URL.
 https://www.figma.com/proto/WpJpyohzwJVBbHFpnS88IZ/Bees?page-id=219%3A198&node-id=312%3A143&viewport=353%2C48%2C1.4&scaling=scale-down
 ## Home page concepts: 
 https://www.figma.com/proto/WpJpyohzwJVBbHFpnS88IZ/Bees?page-id=1%3A2&node-id=219%3A78&scaling=scale-down
+
+# Useful Resources: 
+## React Navigation: 
+https://reactnavigation.org/docs/getting-started
+## AWS Authentication: 
+https://docs.amplify.aws/lib/auth/getting-started/q/platform/js/#create-authentication-service
+## Getting started with Expo: 
+https://reactnavigation.org/docs/getting-started/
