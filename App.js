@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     /* justifyContent:"space-between", */
     backgroundColor:'#EFEFEF',
     /* justifyContent:'space-between', */   
-  },
+  }, 
   listBorder:{
     flex:1,
     backgroundColor: '#FFF',

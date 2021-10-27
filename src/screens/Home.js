@@ -122,7 +122,7 @@ export default HomeScreen = ({navigation}) =>{  /*navigation prop is passed into
             <Text style = {styles.itemTitle}>{item.name}</Text>
             <Text style = {styles.itemSubTitle}>{item.description}</Text>
           </View>
-          
+           
           
 
         </TouchableOpacity>

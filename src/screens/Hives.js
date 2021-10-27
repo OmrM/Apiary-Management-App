@@ -115,7 +115,7 @@ export default HivesScreen = ({navigation}) =>{  /*navigation prop is passed int
             <Text style = {styles.itemSubTitle}>{item.description}</Text>
           </View>
           
-          
+           
 
         </TouchableOpacity>
         } 
