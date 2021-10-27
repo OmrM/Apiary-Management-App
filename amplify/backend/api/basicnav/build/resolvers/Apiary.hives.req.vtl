@@ -1,0 +1,114 @@
+#if( $util.isNull($ctx.source.id) )
+  #set( $result = {
+  "items":   []
+} )
+  #return($result)
+#else
+  #set( $limit = $util.defaultIfNull($context.args.limit, 100) )
+  #set( $query = {
+  "expression": "#partitionKey = :partitionKey",
+  "expressionNames": {
+      "#partitionKey": "ApiaryID"
+  },
+  "expressionValues": {
+      ":partitionKey": {
+          "S": "$context.source.id"
+    }
+  }
+} )
+  ## [Start] Applying Key Condition **
+  #set( $sortKeyValue = "" )
+  #set( $sortKeyValue2 = "" )
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.beginsWith) )
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.beginsWith.name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.beginsWith.name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.beginsWith.description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.beginsWith.description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.beginsWith.location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.beginsWith.location" ) #end
+    #set( $query.expression = "$query.expression AND begins_with(#sortKey, :sortKey)" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+  #end
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.between) )
+    #if( $ctx.args.nameDescriptionLocation.between.size() != 2 )
+      $util.error("Argument nameDescriptionLocation.between expects exactly 2 elements.")
+    #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.between[0].name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.between[0].name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.between[0].description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.between[0].description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.between[0].location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.between[0].location" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.between[1].name) ) #set( $sortKeyValue2 = "$ctx.args.nameDescriptionLocation.between[1].name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.between[1].description) ) #set( $sortKeyValue2 = "$sortKeyValue2#$ctx.args.nameDescriptionLocation.between[1].description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.between[1].location) ) #set( $sortKeyValue2 = "$sortKeyValue2#$ctx.args.nameDescriptionLocation.between[1].location" ) #end
+    #set( $query.expression = "$query.expression AND #sortKey BETWEEN :sortKey0 AND :sortKey1" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey0", { "S": "$sortKeyValue" }))
+    $util.qr($query.expressionValues.put(":sortKey1", { "S": "$sortKeyValue2" }))
+  #end
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.eq) )
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.eq.name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.eq.name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.eq.description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.eq.description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.eq.location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.eq.location" ) #end
+    #set( $query.expression = "$query.expression AND #sortKey = :sortKey" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+  #end
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.lt) )
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.lt.name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.lt.name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.lt.description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.lt.description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.lt.location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.lt.location" ) #end
+    #set( $query.expression = "$query.expression AND #sortKey < :sortKey" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+  #end
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.le) )
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.le.name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.le.name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.le.description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.le.description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.le.location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.le.location" ) #end
+    #set( $query.expression = "$query.expression AND #sortKey <= :sortKey" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+  #end
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.gt) )
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.gt.name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.gt.name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.gt.description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.gt.description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.gt.location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.gt.location" ) #end
+    #set( $query.expression = "$query.expression AND #sortKey > :sortKey" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+  #end
+  #if( !$util.isNull($ctx.args.nameDescriptionLocation) && !$util.isNull($ctx.args.nameDescriptionLocation.ge) )
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.ge.name) ) #set( $sortKeyValue = "$ctx.args.nameDescriptionLocation.ge.name" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.ge.description) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.ge.description" ) #end
+#if( !$util.isNull($ctx.args.nameDescriptionLocation.ge.location) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.nameDescriptionLocation.ge.location" ) #end
+    #set( $query.expression = "$query.expression AND #sortKey >= :sortKey" )
+    $util.qr($query.expressionNames.put("#sortKey", "name#description#location"))
+    $util.qr($query.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+  #end
+
+
+  ## [End] Applying Key Condition **
+{
+      "version": "2018-05-29",
+      "operation": "Query",
+      "query":     $util.toJson($query),
+      "scanIndexForward":     #if( $context.args.sortDirection )
+      #if( $context.args.sortDirection == "ASC" )
+true
+      #else
+false
+      #end
+    #else
+true
+    #end,
+      "filter":     #if( $context.args.filter )
+$util.transform.toDynamoDBFilterExpression($ctx.args.filter)
+    #else
+null
+    #end,
+      "limit": $limit,
+      "nextToken":     #if( $context.args.nextToken )
+$util.toJson($context.args.nextToken)
+    #else
+null
+    #end,
+      "index": "byApiary"
+  }
+#end

@@ -1,0 +1,48 @@
+
+type Album @model {
+  id: ID!
+  name: String!
+  owner: String!
+  photos: [Photo] @connection(name: "AlbumPhotos")
+}
+
+type Photo @model {
+  id: ID!
+  album: Album @connection(name: "AlbumPhotos")
+  bucket: String!
+  fullsize: PhotoS3Info!
+  thumbnail: PhotoS3Info!
+}
+
+type PhotoS3Info {
+    key: String!
+    width: Int!
+    height: Int!
+}
+
+
+
+type Apiary @model  @auth(rules: [ { allow: owner, ownerField: "owner", operations: [create, read, update, delete] }, ]) {
+  id: ID!
+  name: String!
+  description: String
+  location: String
+  image: String
+
+   hives: [Hive] @connection(keyName: "byApiary", fields: ["id"])
+}
+
+
+type Hive @model @auth(rules: [ { allow: owner, ownerField: "owner", operations: [create, read, update, delete] }, ]) @key(name: "byApiary", fields: ["ApiaryID", "name","description", "location" ]) {
+  id: ID!
+  ApiaryID: ID!
+  name: String!
+  description: String
+  location: String
+  image: String
+  
+
+
+}
+
+

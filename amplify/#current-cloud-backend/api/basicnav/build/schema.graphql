@@ -1,0 +1,376 @@
+type Album {
+  id: ID!
+  name: String!
+  owner: String!
+  photos(filter: ModelPhotoFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPhotoConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Photo {
+  id: ID!
+  album: Album
+  bucket: String!
+  fullsize: PhotoS3Info!
+  thumbnail: PhotoS3Info!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type PhotoS3Info {
+  key: String!
+  width: Int!
+  height: Int!
+}
+
+type Apiary {
+  id: ID!
+  name: String!
+  description: String
+  location: String
+  image: String
+  hives(nameDescriptionLocation: ModelHiveByApiaryCompositeKeyConditionInput, filter: ModelHiveFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelHiveConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Hive {
+  id: ID!
+  ApiaryID: ID!
+  name: String!
+  description: String
+  location: String
+  image: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelAlbumConnection {
+  items: [Album]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelAlbumFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  owner: ModelStringInput
+  and: [ModelAlbumFilterInput]
+  or: [ModelAlbumFilterInput]
+  not: ModelAlbumFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getAlbum(id: ID!): Album
+  listAlbums(filter: ModelAlbumFilterInput, limit: Int, nextToken: String): ModelAlbumConnection
+  getPhoto(id: ID!): Photo
+  listPhotos(filter: ModelPhotoFilterInput, limit: Int, nextToken: String): ModelPhotoConnection
+  getApiary(id: ID!): Apiary
+  listApiarys(filter: ModelApiaryFilterInput, limit: Int, nextToken: String): ModelApiaryConnection
+  getHive(id: ID!): Hive
+  listHives(filter: ModelHiveFilterInput, limit: Int, nextToken: String): ModelHiveConnection
+}
+
+input CreateAlbumInput {
+  id: ID
+  name: String!
+  owner: String!
+}
+
+input UpdateAlbumInput {
+  id: ID!
+  name: String
+  owner: String
+}
+
+input DeleteAlbumInput {
+  id: ID!
+}
+
+type Mutation {
+  createAlbum(input: CreateAlbumInput!, condition: ModelAlbumConditionInput): Album
+  updateAlbum(input: UpdateAlbumInput!, condition: ModelAlbumConditionInput): Album
+  deleteAlbum(input: DeleteAlbumInput!, condition: ModelAlbumConditionInput): Album
+  createPhoto(input: CreatePhotoInput!, condition: ModelPhotoConditionInput): Photo
+  updatePhoto(input: UpdatePhotoInput!, condition: ModelPhotoConditionInput): Photo
+  deletePhoto(input: DeletePhotoInput!, condition: ModelPhotoConditionInput): Photo
+  createApiary(input: CreateApiaryInput!, condition: ModelApiaryConditionInput): Apiary
+  updateApiary(input: UpdateApiaryInput!, condition: ModelApiaryConditionInput): Apiary
+  deleteApiary(input: DeleteApiaryInput!, condition: ModelApiaryConditionInput): Apiary
+  createHive(input: CreateHiveInput!, condition: ModelHiveConditionInput): Hive
+  updateHive(input: UpdateHiveInput!, condition: ModelHiveConditionInput): Hive
+  deleteHive(input: DeleteHiveInput!, condition: ModelHiveConditionInput): Hive
+}
+
+input ModelAlbumConditionInput {
+  name: ModelStringInput
+  owner: ModelStringInput
+  and: [ModelAlbumConditionInput]
+  or: [ModelAlbumConditionInput]
+  not: ModelAlbumConditionInput
+}
+
+type Subscription {
+  onCreateAlbum: Album @aws_subscribe(mutations: ["createAlbum"])
+  onUpdateAlbum: Album @aws_subscribe(mutations: ["updateAlbum"])
+  onDeleteAlbum: Album @aws_subscribe(mutations: ["deleteAlbum"])
+  onCreatePhoto: Photo @aws_subscribe(mutations: ["createPhoto"])
+  onUpdatePhoto: Photo @aws_subscribe(mutations: ["updatePhoto"])
+  onDeletePhoto: Photo @aws_subscribe(mutations: ["deletePhoto"])
+  onCreateApiary(owner: String!): Apiary @aws_subscribe(mutations: ["createApiary"])
+  onUpdateApiary(owner: String!): Apiary @aws_subscribe(mutations: ["updateApiary"])
+  onDeleteApiary(owner: String!): Apiary @aws_subscribe(mutations: ["deleteApiary"])
+  onCreateHive(owner: String!): Hive @aws_subscribe(mutations: ["createHive"])
+  onUpdateHive(owner: String!): Hive @aws_subscribe(mutations: ["updateHive"])
+  onDeleteHive(owner: String!): Hive @aws_subscribe(mutations: ["deleteHive"])
+}
+
+input PhotoS3InfoInput {
+  key: String!
+  width: Int!
+  height: Int!
+}
+
+type ModelPhotoConnection {
+  items: [Photo]
+  nextToken: String
+}
+
+input ModelPhotoFilterInput {
+  id: ModelIDInput
+  bucket: ModelStringInput
+  and: [ModelPhotoFilterInput]
+  or: [ModelPhotoFilterInput]
+  not: ModelPhotoFilterInput
+}
+
+input CreatePhotoInput {
+  id: ID
+  bucket: String!
+  fullsize: PhotoS3InfoInput!
+  thumbnail: PhotoS3InfoInput!
+  photoAlbumId: ID
+}
+
+input UpdatePhotoInput {
+  id: ID!
+  bucket: String
+  fullsize: PhotoS3InfoInput
+  thumbnail: PhotoS3InfoInput
+  photoAlbumId: ID
+}
+
+input DeletePhotoInput {
+  id: ID!
+}
+
+input ModelPhotoConditionInput {
+  bucket: ModelStringInput
+  and: [ModelPhotoConditionInput]
+  or: [ModelPhotoConditionInput]
+  not: ModelPhotoConditionInput
+}
+
+type ModelApiaryConnection {
+  items: [Apiary]
+  nextToken: String
+}
+
+input ModelApiaryFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  location: ModelStringInput
+  image: ModelStringInput
+  and: [ModelApiaryFilterInput]
+  or: [ModelApiaryFilterInput]
+  not: ModelApiaryFilterInput
+}
+
+input CreateApiaryInput {
+  id: ID
+  name: String!
+  description: String
+  location: String
+  image: String
+}
+
+input UpdateApiaryInput {
+  id: ID!
+  name: String
+  description: String
+  location: String
+  image: String
+}
+
+input DeleteApiaryInput {
+  id: ID!
+}
+
+input ModelApiaryConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  location: ModelStringInput
+  image: ModelStringInput
+  and: [ModelApiaryConditionInput]
+  or: [ModelApiaryConditionInput]
+  not: ModelApiaryConditionInput
+}
+
+type ModelHiveConnection {
+  items: [Hive]
+  nextToken: String
+}
+
+input ModelHiveFilterInput {
+  id: ModelIDInput
+  ApiaryID: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  location: ModelStringInput
+  image: ModelStringInput
+  and: [ModelHiveFilterInput]
+  or: [ModelHiveFilterInput]
+  not: ModelHiveFilterInput
+}
+
+input CreateHiveInput {
+  id: ID
+  ApiaryID: ID!
+  name: String!
+  description: String
+  location: String
+  image: String
+}
+
+input UpdateHiveInput {
+  id: ID!
+  ApiaryID: ID
+  name: String
+  description: String
+  location: String
+  image: String
+}
+
+input DeleteHiveInput {
+  id: ID!
+}
+
+input ModelHiveConditionInput {
+  ApiaryID: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  location: ModelStringInput
+  image: ModelStringInput
+  and: [ModelHiveConditionInput]
+  or: [ModelHiveConditionInput]
+  not: ModelHiveConditionInput
+}
+
+input ModelHiveByApiaryCompositeKeyConditionInput {
+  eq: ModelHiveByApiaryCompositeKeyInput
+  le: ModelHiveByApiaryCompositeKeyInput
+  lt: ModelHiveByApiaryCompositeKeyInput
+  ge: ModelHiveByApiaryCompositeKeyInput
+  gt: ModelHiveByApiaryCompositeKeyInput
+  between: [ModelHiveByApiaryCompositeKeyInput]
+  beginsWith: ModelHiveByApiaryCompositeKeyInput
+}
+
+input ModelHiveByApiaryCompositeKeyInput {
+  name: String
+  description: String
+  location: String
+}
