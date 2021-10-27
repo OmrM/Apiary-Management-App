@@ -16,9 +16,6 @@ const AddItemButton = ({onPress}) => {
     )
 }
 
-//onPress = { () => onPress()} style = {styles.addItemButton}
-/* onPress={() => {navigation.push('New Hive', {currentApiary:selectedApiaryData});}} */
-
 export default AddItemButton;
 
 const styles = StyleSheet.create({
