@@ -1,18 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 
- 
-
 const AddItemButton = ({onPress}) => {
-
     return(
-    
         <TouchableHighlight onPress = {onPress}> 
           <View style={styles.addButton}>
             <Text style={styles.buttonText}>+</Text>
           </View> 
         </TouchableHighlight>
-    
     )
 }
 
